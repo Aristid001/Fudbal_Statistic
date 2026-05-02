@@ -41,7 +41,7 @@ class GlassCard(QFrame):
         
         # Apply graphics effect before any painting
         self.glow_effect = QGraphicsDropShadowEffect(self)
-        self.glow_effect.setBlurRadius(30)
+        self.glow_effect.setBlurRadius(50)
         self.glow_effect.setXOffset(0)
         self.glow_effect.setYOffset(0)
         glow_color = QColor()
@@ -69,7 +69,7 @@ class GlassCard(QFrame):
             hover_color.setAlpha(120)
             self.glow_effect.setColor(hover_color)
         else:
-            self.glow_effect.setBlurRadius(30)
+            self.glow_effect.setBlurRadius(50)
             normal_color = QColor()
             normal_color.setNamedColor(COLORS['primary'])
             normal_color.setAlpha(60)
@@ -186,7 +186,7 @@ class NeonStatCard(GlassCard):
             letter-spacing: -1px;
         """)
         val_shadow = QGraphicsDropShadowEffect(self.val_lbl)
-        val_shadow.setBlurRadius(15)
+        val_shadow.setBlurRadius(50)
         val_shadow.setColor(QColor(0, 0, 0, 100))
         self.val_lbl.setGraphicsEffect(val_shadow)
         layout.addWidget(self.val_lbl)
@@ -239,7 +239,7 @@ class FuturisticProgressCard(GlassCard):
         icon_lbl = QLabel(icon)
         icon_lbl.setStyleSheet(f"font-size: 28px; color: {self.color};")
         icon_shadow = QGraphicsDropShadowEffect(icon_lbl)
-        icon_shadow.setBlurRadius(15)
+        icon_shadow.setBlurRadius(50)
         ic2_color = QColor()
         ic2_color.setNamedColor(self.color)
         icon_shadow.setColor(ic2_color)
@@ -302,7 +302,7 @@ class FuturisticProgressCard(GlassCard):
         """)
         
         progress_shadow = QGraphicsDropShadowEffect(self.progress_bar)
-        progress_shadow.setBlurRadius(15)
+        progress_shadow.setBlurRadius(50)
         prog_color = QColor()
         prog_color.setNamedColor(self.color)
         prog_color.setAlpha(180)
@@ -356,7 +356,7 @@ class ActivityRow(GlassCard):
             letter-spacing: 1px;
         """)
         date_shadow = QGraphicsDropShadowEffect(date_lbl)
-        date_shadow.setBlurRadius(10)
+        date_shadow.setBlurRadius(50)
         date_color = QColor()
         date_color.setNamedColor(COLORS['primary'])
         date_shadow.setColor(date_color)
@@ -381,7 +381,7 @@ class ActivityRow(GlassCard):
             letter-spacing: 1px;
         """)
         load_shadow = QGraphicsDropShadowEffect(load_lbl)
-        load_shadow.setBlurRadius(8)
+        load_shadow.setBlurRadius(50)
         load_c = QColor()
         load_c.setNamedColor(load_color)
         load_shadow.setColor(load_c)
@@ -442,7 +442,7 @@ class CircularStatWidget(GlassCard):
         """)
         self.value_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         value_shadow = QGraphicsDropShadowEffect(self.value_lbl)
-        value_shadow.setBlurRadius(10)
+        value_shadow.setBlurRadius(50)
         val_color = QColor()
         val_color.setNamedColor(color)
         val_color.setAlpha(150)
@@ -489,7 +489,7 @@ class MiniNeonStat(GlassCard):
         icon_lbl = QLabel(icon)
         icon_lbl.setStyleSheet(f"font-size: 24px; color: {color};")
         icon_shadow = QGraphicsDropShadowEffect(icon_lbl)
-        icon_shadow.setBlurRadius(12)
+        icon_shadow.setBlurRadius(50)
         base_color = QColor()
         base_color.setNamedColor(color)
         icon_shadow.setColor(base_color)
@@ -522,7 +522,7 @@ class MiniNeonStat(GlassCard):
         shadow_color.setAlpha(120)
         
         value_shadow = QGraphicsDropShadowEffect(self.value_lbl)
-        value_shadow.setBlurRadius(10)
+        value_shadow.setBlurRadius(50)
         value_shadow.setColor(shadow_color)
         self.value_lbl.setGraphicsEffect(value_shadow)
         
@@ -634,7 +634,7 @@ class DashboardView(QWidget):
             margin-top: 12px;
         """)
         section_shadow = QGraphicsDropShadowEffect(section_lbl)
-        section_shadow.setBlurRadius(10)
+        section_shadow.setBlurRadius(50)
         shadow_color = QColor()
         shadow_color.setNamedColor(COLORS['primary'])
         shadow_color.setAlpha(150)
