@@ -131,7 +131,9 @@ class NeonStatCard(GlassCard):
         """)
         icon_shadow = QGraphicsDropShadowEffect(icon_lbl)
         icon_shadow.setBlurRadius(20)
-        icon_shadow.setColor(QColor(self.color))
+        ic_color = QColor()
+        ic_color.setNamedColor(self.color)
+        icon_shadow.setColor(ic_color)
         icon_lbl.setGraphicsEffect(icon_shadow)
         
         # Label with futuristic styling
@@ -154,7 +156,9 @@ class NeonStatCard(GlassCard):
         accent_line.setStyleSheet(f"background-color: {self.color}; border-radius: 1px;")
         accent_shadow = QGraphicsDropShadowEffect(accent_line)
         accent_shadow.setBlurRadius(10)
-        accent_shadow.setColor(QColor(self.color))
+        acc_color = QColor()
+        acc_color.setNamedColor(self.color)
+        accent_shadow.setColor(acc_color)
         accent_line.setGraphicsEffect(accent_shadow)
         
         layout.addLayout(top)
@@ -223,7 +227,9 @@ class FuturisticProgressCard(GlassCard):
         icon_lbl.setStyleSheet(f"font-size: 28px; color: {self.color};")
         icon_shadow = QGraphicsDropShadowEffect(icon_lbl)
         icon_shadow.setBlurRadius(15)
-        icon_shadow.setColor(QColor(self.color))
+        ic2_color = QColor()
+        ic2_color.setNamedColor(self.color)
+        icon_shadow.setColor(ic2_color)
         icon_lbl.setGraphicsEffect(icon_shadow)
         
         lbl = QLabel(label.upper())
@@ -251,7 +257,10 @@ class FuturisticProgressCard(GlassCard):
         self.pct_lbl.setAlignment(Qt.AlignmentFlag.AlignRight)
         pct_shadow = QGraphicsDropShadowEffect(self.pct_lbl)
         pct_shadow.setBlurRadius(12)
-        pct_shadow.setColor(QColor(self.color, 150))
+        pct_color = QColor()
+        pct_color.setNamedColor(self.color)
+        pct_color.setAlpha(150)
+        pct_shadow.setColor(pct_color)
         self.pct_lbl.setGraphicsEffect(pct_shadow)
         layout.addWidget(self.pct_lbl)
         
@@ -281,7 +290,10 @@ class FuturisticProgressCard(GlassCard):
         
         progress_shadow = QGraphicsDropShadowEffect(self.progress_bar)
         progress_shadow.setBlurRadius(15)
-        progress_shadow.setColor(QColor(self.color, 180))
+        prog_color = QColor()
+        prog_color.setNamedColor(self.color)
+        prog_color.setAlpha(180)
+        progress_shadow.setColor(prog_color)
         self.progress_bar.setGraphicsEffect(progress_shadow)
         
         progress_layout.addWidget(self.progress_bar)
@@ -332,7 +344,9 @@ class ActivityRow(GlassCard):
         """)
         date_shadow = QGraphicsDropShadowEffect(date_lbl)
         date_shadow.setBlurRadius(10)
-        date_shadow.setColor(QColor(COLORS['primary']))
+        date_color = QColor()
+        date_color.setNamedColor(COLORS['primary'])
+        date_shadow.setColor(date_color)
         date_lbl.setGraphicsEffect(date_shadow)
         
         # Focus area
@@ -355,7 +369,9 @@ class ActivityRow(GlassCard):
         """)
         load_shadow = QGraphicsDropShadowEffect(load_lbl)
         load_shadow.setBlurRadius(8)
-        load_shadow.setColor(QColor(load_color))
+        load_c = QColor()
+        load_c.setNamedColor(load_color)
+        load_shadow.setColor(load_c)
         load_lbl.setGraphicsEffect(load_shadow)
         
         # Info label
@@ -414,7 +430,10 @@ class CircularStatWidget(GlassCard):
         self.value_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         value_shadow = QGraphicsDropShadowEffect(self.value_lbl)
         value_shadow.setBlurRadius(10)
-        value_shadow.setColor(QColor(color, 150))
+        val_color = QColor()
+        val_color.setNamedColor(color)
+        val_color.setAlpha(150)
+        value_shadow.setColor(val_color)
         self.value_lbl.setGraphicsEffect(value_shadow)
         layout.addWidget(self.value_lbl)
         
@@ -540,7 +559,9 @@ class DashboardView(QWidget):
         """)
         title_shadow = QGraphicsDropShadowEffect(title)
         title_shadow.setBlurRadius(20)
-        title_shadow.setColor(QColor(COLORS['primary']))
+        title_color = QColor()
+        title_color.setNamedColor(COLORS['primary'])
+        title_shadow.setColor(title_color)
         title.setGraphicsEffect(title_shadow)
         
         sub = QLabel("Your squad overview at a glance")
@@ -601,7 +622,10 @@ class DashboardView(QWidget):
         """)
         section_shadow = QGraphicsDropShadowEffect(section_lbl)
         section_shadow.setBlurRadius(10)
-        section_shadow.setColor(QColor(COLORS['primary'], 150))
+        shadow_color = QColor()
+        shadow_color.setNamedColor(COLORS['primary'])
+        shadow_color.setAlpha(150)
+        section_shadow.setColor(shadow_color)
         section_lbl.setGraphicsEffect(section_shadow)
         root.addWidget(section_lbl)
 
