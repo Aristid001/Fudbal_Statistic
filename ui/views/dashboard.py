@@ -39,6 +39,17 @@ class GlassCard(QFrame):
         self.setMouseTracking(True)
         self._hovered = False
         
+        # Apply graphics effect before any painting
+        self.glow_effect = QGraphicsDropShadowEffect(self)
+        self.glow_effect.setBlurRadius(30)
+        self.glow_effect.setXOffset(0)
+        self.glow_effect.setYOffset(0)
+        glow_color = QColor()
+        glow_color.setNamedColor(COLORS['primary'])
+        glow_color.setAlpha(60)
+        self.glow_effect.setColor(glow_color)
+        self.setGraphicsEffect(self.glow_effect)
+        
         # Base styling
         self.setStyleSheet("""
             QFrame {
@@ -46,30 +57,32 @@ class GlassCard(QFrame):
                 border: none;
             }
         """)
-        
-        # Glow effect
-        self.glow_effect = QGraphicsDropShadowEffect(self)
-        self.glow_effect.setBlurRadius(30)
-        self.glow_effect.setXOffset(0)
-        self.glow_effect.setYOffset(0)
-        self.glow_effect.setColor(QColor(0, 240, 255, 60))
-        self.setGraphicsEffect(self.glow_effect)
-        
-        # Opacity effect for animations
-        self.opacity_effect = QGraphicsOpacityEffect(self)
-        self.opacity_effect.setOpacity(1.0)
-        self.setGraphicsEffect(self.opacity_effect)
+    
+    def _update_glow(self):
+        """Update glow effect based on hover state"""
+        if not self.glow_effect:
+            return
+        if self._hovered:
+            self.glow_effect.setBlurRadius(50)
+            hover_color = QColor()
+            hover_color.setNamedColor(COLORS['primary'])
+            hover_color.setAlpha(120)
+            self.glow_effect.setColor(hover_color)
+        else:
+            self.glow_effect.setBlurRadius(30)
+            normal_color = QColor()
+            normal_color.setNamedColor(COLORS['primary'])
+            normal_color.setAlpha(60)
+            self.glow_effect.setColor(normal_color)
     
     def enterEvent(self, event):
         self._hovered = True
-        self.glow_effect.setBlurRadius(50)
-        self.glow_effect.setColor(QColor(0, 240, 255, 120))
+        self._update_glow()
         super().enterEvent(event)
     
     def leaveEvent(self, event):
         self._hovered = False
-        self.glow_effect.setBlurRadius(30)
-        self.glow_effect.setColor(QColor(0, 240, 255, 60))
+        self._update_glow()
         super().leaveEvent(event)
     
     def paintEvent(self, event):
