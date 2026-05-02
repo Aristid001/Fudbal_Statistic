@@ -49,11 +49,16 @@ def main():
     
     try:
         font = QFont(font_name, 10) if font_name else QFont()
-        font.setPointSize(10)  # Ensure positive point size
+        # Ensure positive point size to avoid QFont warnings
+        if font.pointSize() <= 0:
+            font.setPointSize(10)
         app.setFont(font)
     except Exception:
         # Fallback to default font if anything fails
-        app.setFont(QFont())
+        fallback_font = QFont()
+        if fallback_font.pointSize() <= 0:
+            fallback_font.setPointSize(10)
+        app.setFont(fallback_font)
 
     # ── Database ──────────────────────────────────────────────────────────────
     from core.database import init_database

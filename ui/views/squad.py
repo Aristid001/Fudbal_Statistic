@@ -159,8 +159,9 @@ class SquadHubView(QWidget):
         self.table.setColumnCount(6)
         self.table.setHorizontalHeaderLabels(["#","Name","Position","Status","DOB","Notes"])
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        # All columns are interactive (can be resized by dragging), Name column stretches to fill
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Interactive)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.Interactive)
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Interactive)
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.Interactive)
