@@ -78,6 +78,8 @@ class TrainingSession:
     focus_area: Optional[str]
     notes: Optional[str]
     drills: list[Drill] = field(default_factory=list)
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
     @property
     def total_load(self) -> int:
