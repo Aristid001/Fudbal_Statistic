@@ -27,7 +27,7 @@ def main():
 
     from PyQt6.QtWidgets import QApplication
     from PyQt6.QtCore    import Qt
-    from PyQt6.QtGui     import QFont
+    from PyQt6.QtGui     import QFont, QFontDatabase
 
     app = QApplication(sys.argv)
     app.setApplicationName("FTMS")
@@ -35,9 +35,25 @@ def main():
     app.setApplicationVersion("1.0.0")
     app.setOrganizationName("FTMS")
 
-    # Default font
-    font = QFont("Segoe UI", 10)
-    app.setFont(font)
+    # Default font - use system-safe fallbacks
+    available_fonts = QFontDatabase.families()
+    font_name = "Segoe UI"
+    if font_name not in available_fonts:
+        # Try other common fonts
+        for fallback in ["Inter", "SF Pro Display", "Ubuntu", "DejaVu Sans", "Arial", "Sans Serif"]:
+            if fallback in available_fonts:
+                font_name = fallback
+                break
+        else:
+            font_name = ""  # Use system default
+    
+    try:
+        font = QFont(font_name, 10) if font_name else QFont()
+        font.setPointSize(10)  # Ensure positive point size
+        app.setFont(font)
+    except Exception:
+        # Fallback to default font if anything fails
+        app.setFont(QFont())
 
     # ── Database ──────────────────────────────────────────────────────────────
     from core.database import init_database
