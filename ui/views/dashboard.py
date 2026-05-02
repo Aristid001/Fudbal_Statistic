@@ -458,7 +458,9 @@ class MiniNeonStat(GlassCard):
         icon_lbl.setStyleSheet(f"font-size: 24px; color: {color};")
         icon_shadow = QGraphicsDropShadowEffect(icon_lbl)
         icon_shadow.setBlurRadius(12)
-        icon_shadow.setColor(QColor(color))
+        base_color = QColor()
+        base_color.setNamedColor(color)
+        icon_shadow.setColor(base_color)
         icon_lbl.setGraphicsEffect(icon_shadow)
         icon_layout.addWidget(icon_lbl)
         
@@ -482,7 +484,8 @@ class MiniNeonStat(GlassCard):
             font-weight: 900;
         """)
         # Shadow effect with proper color parsing
-        base_color = QColor(color)
+        base_color = QColor()
+        base_color.setNamedColor(color)
         shadow_color = QColor(base_color)
         shadow_color.setAlpha(120)
         
