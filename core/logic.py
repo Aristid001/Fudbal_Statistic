@@ -45,6 +45,8 @@ class Drill:
     duration_mins: int
     intensity: int
     positions: str = "ALL"
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
     @property
     def load(self) -> int:
