@@ -26,6 +26,8 @@ class Player:
     status: str
     date_of_birth: Optional[str] = None
     notes: Optional[str] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
     @property
     def status_color(self) -> str:
