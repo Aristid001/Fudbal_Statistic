@@ -2,10 +2,10 @@
 
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFrame,
-    QPushButton, QScrollArea, QSizePolicy, QGridLayout, QProgressBar
+    QPushButton, QScrollArea, QSizePolicy, QGridLayout, QProgressBar, QGraphicsDropShadowEffect
 )
-from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt, QTimer, QPoint
+from PyQt6.QtGui import QFont, QColor
 import math
 
 from ui.theme import C_ACCENT, C_TEXT, C_TEXT_SUB, C_SURFACE, C_BORDER, C_BG, C_GREEN, C_RED, C_AMBER
@@ -19,6 +19,8 @@ class StatCard(QFrame):
         self.color = color or C_ACCENT
         self.setFixedHeight(140)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        
+        # Modern styling without invalid CSS
         self.setStyleSheet(f"""
             QFrame {{
                 background-color: {C_SURFACE};
@@ -26,21 +28,29 @@ class StatCard(QFrame):
                 border-radius: 12px;
             }}
             QFrame:hover {{
-                border: 1px solid {self.color};
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                border: 2px solid {self.color};
+                background-color: rgba(255,255,255,0.05);
             }}
         """)
+        
+        # Add shadow effect programmatically
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(15)
+        shadow.setXOffset(0)
+        shadow.setYOffset(4)
+        shadow.setColor(QColor(0, 0, 0, 80))
+        self.setGraphicsEffect(shadow)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(16, 14, 16, 14)
-        layout.setSpacing(6)
+        layout.setContentsMargins(20, 16, 20, 16)
+        layout.setSpacing(8)
 
         # Top row: icon + label
         top = QHBoxLayout()
         icon_lbl = QLabel(icon)
-        icon_lbl.setStyleSheet(f"font-size: 22px; color: {self.color};")
+        icon_lbl.setStyleSheet(f"font-size: 24px; color: {self.color};")
         lbl = QLabel(label.upper())
-        lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;")
+        lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 11px; font-weight: 700; letter-spacing: 1.5px;")
         top.addWidget(icon_lbl)
         top.addWidget(lbl)
         top.addStretch()
@@ -48,21 +58,26 @@ class StatCard(QFrame):
 
         # Value
         self.val_lbl = QLabel(value)
-        self.val_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 32px; font-weight: 700;")
+        self.val_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 36px; font-weight: 800;")
         layout.addWidget(self.val_lbl)
 
         # Sub
         if sub:
             sub_lbl = QLabel(sub)
-            sub_lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 12px;")
+            sub_lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 13px; font-weight: 500;")
             layout.addWidget(sub_lbl)
 
         layout.addStretch()
 
     def update_value(self, value: str, sub: str = ""):
         self.val_lbl.setText(value)
-        if hasattr(self, 'sub_lbl'):
-            self.sub_lbl.setText(sub)
+        # Find and update sub label if it exists
+        for i in range(self.layout().count()):
+            item = self.layout().itemAt(i)
+            if item.widget() and isinstance(item.widget(), QLabel) and item.widget().text() != value:
+                if item.widget().styleSheet().find("C_TEXT_SUB") != -1 or "color:" in item.widget().styleSheet():
+                    item.widget().setText(sub)
+                    break
 
 
 class ProgressBarCard(QFrame):
@@ -78,17 +93,25 @@ class ProgressBarCard(QFrame):
                 border-radius: 12px;
             }}
         """)
+        
+        # Add shadow effect
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(15)
+        shadow.setXOffset(0)
+        shadow.setYOffset(4)
+        shadow.setColor(QColor(0, 0, 0, 80))
+        self.setGraphicsEffect(shadow)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(16, 14, 16, 14)
-        layout.setSpacing(8)
+        layout.setContentsMargins(20, 16, 20, 16)
+        layout.setSpacing(10)
 
         # Top row: icon + label
         top = QHBoxLayout()
         icon_lbl = QLabel(icon)
-        icon_lbl.setStyleSheet(f"font-size: 20px; color: {self.color};")
+        icon_lbl.setStyleSheet(f"font-size: 22px; color: {self.color};")
         lbl = QLabel(label.upper())
-        lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;")
+        lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 11px; font-weight: 700; letter-spacing: 1.5px;")
         top.addWidget(icon_lbl)
         top.addWidget(lbl)
         top.addStretch()
@@ -96,7 +119,7 @@ class ProgressBarCard(QFrame):
 
         # Value label
         self.val_lbl = QLabel(f"{value}/{max_value}")
-        self.val_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 24px; font-weight: 700;")
+        self.val_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 26px; font-weight: 700;")
         self.val_lbl.setAlignment(Qt.AlignmentFlag.AlignRight)
         layout.addWidget(self.val_lbl)
 
@@ -110,7 +133,7 @@ class ProgressBarCard(QFrame):
                 background-color: {C_BG};
                 border: none;
                 border-radius: 6px;
-                height: 8px;
+                height: 10px;
                 text-align: center;
             }}
             QProgressBar::chunk {{
@@ -136,26 +159,27 @@ class ActivityRow(QFrame):
                 border-radius: 0;
             }}
             QFrame:hover {{
-                background-color: rgba(255,255,255,0.05);
+                background-color: rgba(255,255,255,0.03);
+                border-radius: 8px;
             }}
         """)
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setContentsMargins(16, 14, 16, 14)
 
         date_lbl = QLabel(session.session_date)
-        date_lbl.setStyleSheet(f"color: {C_ACCENT}; font-weight: 600; font-size: 13px; min-width: 110px;")
+        date_lbl.setStyleSheet(f"color: {C_ACCENT}; font-weight: 700; font-size: 14px; min-width: 110px;")
 
         focus_lbl = QLabel(session.focus_area or "General Training")
-        focus_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 13px; font-weight: 500;")
+        focus_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 14px; font-weight: 600;")
 
         # Load indicator
         load_val = session.total_load
         load_color = C_GREEN if load_val < 100 else C_AMBER if load_val < 200 else C_RED
         load_lbl = QLabel(f"Load: {load_val}")
-        load_lbl.setStyleSheet(f"color: {load_color}; font-size: 12px; font-weight: 600;")
+        load_lbl.setStyleSheet(f"color: {load_color}; font-size: 13px; font-weight: 700;")
 
         drills_lbl = QLabel(f"{len(session.drills)} drills · {session.total_duration} min")
-        drills_lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 11px;")
+        drills_lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 12px; font-weight: 500;")
         drills_lbl.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         layout.addWidget(date_lbl)
@@ -168,30 +192,42 @@ class ActivityRow(QFrame):
 class MiniStatWidget(QFrame):
     def __init__(self, title: str, value: str, icon: str, color: str, parent=None):
         super().__init__(parent)
-        self.setFixedHeight(80)
+        self.setFixedHeight(90)
         self.setStyleSheet(f"""
             QFrame {{
                 background-color: {C_SURFACE};
                 border: 1px solid {C_BORDER};
-                border-radius: 8px;
+                border-radius: 10px;
+            }}
+            QFrame:hover {{
+                border: 2px solid {color};
+                background-color: rgba(255,255,255,0.03);
             }}
         """)
         
+        # Add shadow effect
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(12)
+        shadow.setXOffset(0)
+        shadow.setYOffset(3)
+        shadow.setColor(QColor(0, 0, 0, 60))
+        self.setGraphicsEffect(shadow)
+        
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(12, 8, 12, 8)
-        layout.setSpacing(10)
+        layout.setContentsMargins(14, 10, 14, 10)
+        layout.setSpacing(12)
         
         icon_lbl = QLabel(icon)
-        icon_lbl.setStyleSheet(f"font-size: 24px; color: {color};")
+        icon_lbl.setStyleSheet(f"font-size: 28px; color: {color};")
         
         v_layout = QVBoxLayout()
-        v_layout.setSpacing(2)
+        v_layout.setSpacing(3)
         
         title_lbl = QLabel(title)
-        title_lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 9px; font-weight: 600; letter-spacing: 1px;")
+        title_lbl.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;")
         
         self.value_lbl = QLabel(value)
-        self.value_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 18px; font-weight: 700;")
+        self.value_lbl.setStyleSheet(f"color: {C_TEXT}; font-size: 22px; font-weight: 800;")
         
         v_layout.addWidget(title_lbl)
         v_layout.addWidget(self.value_lbl)
@@ -217,26 +253,27 @@ class DashboardView(QWidget):
 
     def _build_ui(self):
         root = QVBoxLayout(self)
-        root.setContentsMargins(24, 24, 24, 24)
-        root.setSpacing(20)
+        root.setContentsMargins(28, 28, 28, 28)
+        root.setSpacing(24)
 
         # ── Page title ───────────────────────────────────────────────────────
         title_row = QHBoxLayout()
         title = QLabel("Dashboard")
-        title.setStyleSheet("font-size: 28px; font-weight: 700; color: #E6EDF3;")
+        title.setStyleSheet("font-size: 32px; font-weight: 800; color: #E6EDF3; letter-spacing: -0.5px;")
         sub = QLabel("Your squad overview at a glance")
-        sub.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 13px; margin-top: 4px;")
+        sub.setStyleSheet(f"color: {C_TEXT_SUB}; font-size: 14px; font-weight: 400; margin-top: 4px;")
         title_row.addWidget(title)
         title_row.addStretch()
 
         v = QVBoxLayout()
+        v.setSpacing(4)
         v.addWidget(title)
         v.addWidget(sub)
         root.addLayout(v)
 
         # ── Main stat cards ──────────────────────────────────────────────────
         self.cards_grid = QGridLayout()
-        self.cards_grid.setSpacing(12)
+        self.cards_grid.setSpacing(16)
 
         self.card_next    = StatCard("📅", "Next Session",     "—",    color=C_ACCENT)
         self.card_injured = StatCard("🏥", "Injured Players",  "0",    color=C_RED)
@@ -253,7 +290,7 @@ class DashboardView(QWidget):
 
         # ── Additional stats row ─────────────────────────────────────────────
         self.mini_stats_layout = QHBoxLayout()
-        self.mini_stats_layout.setSpacing(12)
+        self.mini_stats_layout.setSpacing(16)
         
         self.stat_fit_players = MiniStatWidget("Fit Players", "0", "✅", C_GREEN)
         self.stat_suspended = MiniStatWidget("Suspended", "0", "⚠️", C_AMBER)
@@ -268,13 +305,37 @@ class DashboardView(QWidget):
 
         # ── Recent sessions ──────────────────────────────────────────────────
         section_lbl = QLabel("RECENT SESSIONS")
-        section_lbl.setStyleSheet(f"color: {C_ACCENT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; margin-top: 8px;")
+        section_lbl.setStyleSheet(f"color: {C_ACCENT}; font-size: 12px; font-weight: 800; letter-spacing: 2.5px; margin-top: 8px; text-transform: uppercase;")
         root.addWidget(section_lbl)
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.Shape.NoFrame)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setStyleSheet(f"""
+            QScrollArea {{ 
+                background: {C_SURFACE}; 
+                border: 1px solid {C_BORDER}; 
+                border-radius: 12px; 
+            }}
+            QScrollBar:vertical {{
+                background: {C_BG};
+                width: 10px;
+                border-radius: 5px;
+                margin: 0;
+            }}
+            QScrollBar::handle:vertical {{
+                background: {C_BORDER};
+                border-radius: 5px;
+                min-height: 20px;
+            }}
+            QScrollBar::handle:vertical:hover {{
+                background: {C_ACCENT};
+            }}
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                height: 0;
+            }}
+        """)
 
         self.sessions_container = QWidget()
         self.sessions_layout = QVBoxLayout(self.sessions_container)
@@ -283,7 +344,6 @@ class DashboardView(QWidget):
         self.sessions_layout.addStretch()
 
         scroll.setWidget(self.sessions_container)
-        scroll.setStyleSheet(f"QScrollArea {{ background: {C_SURFACE}; border: 1px solid {C_BORDER}; border-radius: 12px; }}")
         root.addWidget(scroll, 1)
 
     def refresh(self):
